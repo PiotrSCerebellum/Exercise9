@@ -1,41 +1,48 @@
 
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class Task5 {
 
     public static void main (String args[])  {
-        String welcome="Enter first 3 digit account number";
-        String dataLocation="C:\\Users\\Woda\\Desktop\\BankData.txt";
-        String results=" ";
-        String query="";
+        String welcome = "Enter first 3 digit account number";
+
+        String results = "";
+        String query = "";
         System.out.println(welcome);
-        try(BufferedReader reader = new BufferedReader(new InputStreamReader(System.in)))
+        URL dataLocation = null;
+        try
         {
-            query= reader.readLine();
-            //System.out.println(query);
+            dataLocation = new URL("https://ewib.nbp.pl/plewibnra?dokNazwa=plewibnra.txt");
         }
-        catch (IOException e) {
+        catch (MalformedURLException e) {
+            System.out.println("Wrong URL");
+        }
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in)))
+        {
+            query = reader.readLine();
+        }
+        catch (IOException e)
+        {
             System.out.println("IOerror");
         }
-        try(BufferedReader fis=new BufferedReader(new FileReader(dataLocation)))
+        try (BufferedReader fis = new BufferedReader(new InputStreamReader(dataLocation.openStream()));)
         {
-            while(true)  {
-
-                results= fis.readLine();
-                if(results==null)
+            do
+            {
+                results = fis.readLine();
+                if (results.substring(0, 3).equals(query))
                 {
-                    System.out.println("Found nothing");
-                    return;
-                }
-                if(results.substring(0,3).equals(query))
-                {
-                    System.out.println(results.substring(0,results.indexOf("                ")));
+                    System.out.println(results.substring(0, results.indexOf("                ")));
                     return;
                 }
 
-            }
-        }catch (FileNotFoundException e)
-        {
+            }while (results != null);
+            if(results == null)
+                System.out.println("Found nothing");
+
+        } catch (FileNotFoundException e) {
             System.out.println("File not found");
             return;
         } catch (IOException e) {
