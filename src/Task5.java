@@ -5,10 +5,10 @@ import java.net.URL;
 
 public class Task5 {
 
-    public static void main (String args[])  {
+    public static void main (String[] args)  {
         String welcome = "Enter first 3 digit account number";
 
-        String results = "";
+        String results;
         String query = "";
         System.out.println(welcome);
         URL dataLocation = null;
@@ -27,24 +27,24 @@ public class Task5 {
         {
             System.out.println("IOerror");
         }
-        try (BufferedReader fis = new BufferedReader(new InputStreamReader(dataLocation.openStream()));)
+        try (BufferedReader fis = new BufferedReader(new InputStreamReader(dataLocation.openStream())))
         {
-            do
+            while (true)
             {
+
                 results = fis.readLine();
-                if (results.substring(0, 3).equals(query))
-                {
+                if (results == null) {
+                    System.out.println("Found nothing");
+                    return;
+                }
+                if (results.substring(0, 3).equals(query)) {
                     System.out.println(results.substring(0, results.indexOf("                ")));
                     return;
                 }
 
-            }while (results != null);
-            if(results == null)
-                System.out.println("Found nothing");
-
+            }
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
-            return;
         } catch (IOException e) {
             System.out.println("IO error");
         }
